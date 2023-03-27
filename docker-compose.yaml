@@ -1,0 +1,38 @@
+version: "3.7"
+
+services:
+  dk_roupas:
+    image: webdevops/php-nginx:8.1
+    restart: always
+    container_name: ct_roupas
+    working_dir: /var/www/app
+    volumes:
+      - ./www/:/var/www/app
+    environment:
+      - WEB_DOCUMENT_ROOT=/var/www/app/public/
+      - WEB_DOCUMENT_INDEX=index.php
+      - PHP_DATE_TIMEZONE=UTC
+      - PHP_DISPLAY_ERRORS=1
+      - PHP_MEMORY_LIMIT=2048M
+      - PHP_MAX_EXECUTION_TIME=86400
+      - PHP_POST_MAX_SIZE=500M
+      - PHP_UPLOAD_MAX_FILESIZE=500M
+    expose:
+      - 9003
+    ports:
+      - 80:80
+  dk_roupas_mysql:
+    image: mysql:5.7
+    container_name: ct_roupas_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    # volumes:
+    #   - ./docker_compose/mysql/data/:/var/lib/mysql # dados db
+    #   - ./docker_compose/mysql:/docker-entrypoint-initdb.d # migrate inicial
+    ports:
+      - "3306:3306"
